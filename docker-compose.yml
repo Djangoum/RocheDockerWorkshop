@@ -3,8 +3,26 @@ services:
   exposedapi:
     build: ./exposedrestapi
     depends_on:
-      - internalrestapi
-    ports:
-      - "4000:80"
-  internalrestapi:
+      - valuemachine
+    networks:
+      - internal-network
+      - external-network
+  valuemachine:
     build: ./internalrestapi
+    networks: 
+      - internal-network
+  reverseproxy:
+    build: ./
+    ports:
+      - "80:80"
+    depends_on:
+      - valuemachine
+      - exposedapi
+    networks:
+      - external-network
+
+networks:
+  internal-network:
+    driver: bridge
+  external-network:
+    driver: bridge
