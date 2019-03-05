@@ -1,0 +1,41 @@
+version: '3'
+services:
+  exposedapi:
+    image: docker-examples_exposedapi
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+    depends_on:
+      - valuemachine
+    networks:
+      - external
+  valuemachine:
+    image: docker-examples_valuemachine
+    networks:
+      - external
+  reverseproxy:
+    image: docker-examples_reverseproxy
+    ports:
+      - "80:80"
+    depends_on:
+      - valuemachine
+      - exposedapi
+    networks:
+      - external
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+
+networks:
+  external:
+    driver: overlay

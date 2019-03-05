@@ -5,12 +5,11 @@ services:
     depends_on:
       - valuemachine
     networks:
-      - internal-network
-      - external-network
+      - external
   valuemachine:
     build: ./internalrestapi
-    networks: 
-      - internal-network
+    networks:
+      - external
   reverseproxy:
     build: ./
     ports:
@@ -19,10 +18,8 @@ services:
       - valuemachine
       - exposedapi
     networks:
-      - external-network
+      - external
 
 networks:
-  internal-network:
-    driver: bridge
-  external-network:
+  external:
     driver: bridge
