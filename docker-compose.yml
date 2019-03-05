@@ -1,0 +1,10 @@
+version: '3'
+services:
+  exposedapi:
+    build: ./exposedrestapi
+    depends_on:
+      - internalrestapi
+    ports:
+      - "4000:80"
+  internalrestapi:
+    build: ./internalrestapi
